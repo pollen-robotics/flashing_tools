@@ -16,15 +16,15 @@ from PyQt6.QtWidgets import (
 from tools import flash_motor
 
 motors_per_part = {
-    'right arm': ['r_shoulder_pitch', 'r_shoulder_roll', 'r_arm_yaw',
-                  'r_elbow_pitch', 'r_forearm_yaw',
-                  'r_wrist_pitch', 'r_wrist_roll',
-                  'r_gripper'],
-    'left arm': ['l_shoulder_pitch', 'l_shoulder_roll', 'l_arm_yaw',
-                 'l_elbow_pitch', 'l_forearm_yaw',
-                 'l_wrist_pitch', 'l_wrist_roll',
-                 'l_gripper'],
-    'head': ['l_antenna', 'r_antenna'],
+    'bras droit': ['épaule droite 1', 'épaule droite 2', 'biceps droit',
+                   'coude droit', 'avant-bras droit',
+                   'poignet droit 1', 'poignet droit 2',
+                   'pince droite'],
+    'bras gauche': ['épaule gauche 1', 'épaule gauche 2', 'biceps gauche',
+                    'coude gauche', 'avant-bras gauche',
+                    'poignet gauche 1', 'poignet gauche 2',
+                    'pince gauche'],
+    'tête': ['antenne gauche', 'antenne droite'],
 }
 
 
@@ -44,7 +44,7 @@ class ProgressThread(QThread):
         while not self.stopped and self.count <= 100:
             self.count += 1
             self.count_changed.emit(self.count)
-            time.sleep(0.044)
+            time.sleep(0.045)
 
         self.count = 0
 
@@ -54,17 +54,22 @@ class ProgressThread(QThread):
 
 class FlashThread(QThread):
 
-    flash_result_signal = pyqtSignal(int)
+    flash_result_signal = pyqtSignal(str)
     robot_part = 'none'
     motor_name = 'none'
+    motor_type = 'none'
 
     def run(self):
-        flash_result = flash_motor(self.robot_part, self.motor_name)
+        flash_result = flash_motor(self.robot_part, self.motor_name, self.motor_type)
         self.flash_result_signal.emit(flash_result)
 
     def get_motor_info(self, info):
         self.robot_part = info['robot_part']
         self.motor_name = info['motor_name']
+        if self.robot_part == 'tête':
+            self.motor_type = 'dxl320'
+        else:
+            self.motor_type = 'dxl'
 
 
 class TabWidgetCreator(QWidget):
@@ -81,7 +86,7 @@ class TabWidgetCreator(QWidget):
         self.modules_list = QComboBox()
         self.modules_list.addItems(motors_per_part[widget_name])
 
-        flash_button = QPushButton('Flash')
+        flash_button = QPushButton('Configurer')
         flash_button.clicked.connect(self.flash)
 
         self.progress_bar = QProgressBar(self)
@@ -118,13 +123,11 @@ class TabWidgetCreator(QWidget):
     def set_progress(self, value):
         self.progress_bar.setValue(value)
 
-    def check_flash(self, value):
-        if value == -1:
+    def check_flash(self, msg):
+        if msg != 'Motor configuré.':
             self.progress_thread.stop()
             self.progress_bar.setValue(0)
-            self.flash_info_label.setText("Flash failed. Make sure the motor is connected.")
-        if value == 0:
-            self.flash_info_label.setText("Flash succeeded. The motor can be safely unplugged.")
+        self.flash_info_label.setText(msg)
 
 
 class MainWindow(QMainWindow):
@@ -132,12 +135,12 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setFixedSize(QSize(400, 200))
-        self.setWindowTitle('Motor Flashing')
+        self.setWindowTitle('Configuration moteur')
 
         tabs = QTabWidget()
         tabs.setMovable(True)
 
-        for part in ['right arm', 'left arm', 'head']:
+        for part in ['bras droit', 'bras gauche', 'tête']:
             tabs.addTab(TabWidgetCreator(part), part)
 
         self.setCentralWidget(tabs)
