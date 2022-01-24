@@ -14,9 +14,9 @@ CONFIG_PATH = Path.home() / 'dev' / 'reachy_pyluos_hal' / 'reachy_pyluos_hal' / 
 
 
 robot_part_to_real_name = {
-    'left arm': 'left_arm_advanced',
-    'right arm': 'right_arm_advanced',
-    'head': 'head',
+    'bras gauche': 'left_arm_advanced',
+    'bras droit': 'right_arm_advanced',
+    'tête': 'head',
 }
 
 
@@ -52,18 +52,32 @@ def get_motor_config(robot_part, motor_name):
 
 def get_usb2ax_port():
     if sys.platform == 'linux':
-        port_template = '/dev/ttyUSB*'
+        port_template = '/dev/ttyACM*'
     elif sys.platform == 'darwin':
         port_template = '/dev/tty.usbmodem*'
-        return glob(port_template)[0]
+
+    try:
+        port = glob(port_template)[0]
+    except IndexError:
+        port = ''
+    return port
 
 
-def flash_motor(robot_part, motor_name):
+def flash_motor(robot_part, motor_name, motor_type = 'dxl'):
     config = get_motor_config(robot_part, motor_name)
 
-    dxl = DxlIO(port=get_usb2ax_port(), baudrate=57600)
+    port = get_usb2ax_port()
 
-    if not dxl.scan(range(40)):
+    if port == '':
+        return 'USB non détecté.'
+
+    if motor_type == 'dxl320':
+        dxl = Dxl320IO(port=port)
+
+    else:
+        dxl = DxlIO(port=port, baudrate=57600)
+
+    if not dxl.scan(range(40)) and motor_type=='dxl':
         dxl.close()
         dxl = DxlIO(port=get_usb2ax_port(), baudrate=1000000)
 
@@ -71,16 +85,16 @@ def flash_motor(robot_part, motor_name):
 
     if not dxl_scanned:
         dxl.close()
-        return -1  # No motor detected
+        return 'Pas de moteur détecté. \n Assurez-vous que le moteur est correctement branché.'
 
     if len(dxl_scanned) > 1:
         dxl.close()
-        return -1  # Multiple motors detected
+        return 'Plusieurs moteurs détectés. \n Rééssayez avec seulement un moteur branché.'
 
     new_id = config['id']
 
     if dxl_scanned[0] != new_id:
-        dxl.change_id({dxl_scanned[0] : new_id})
+        dxl.change_id({dxl_scanned[0]: new_id})
 
     dxl.change_baudrate({new_id: 1000000})
     time.sleep(0.01)
@@ -91,4 +105,4 @@ def flash_motor(robot_part, motor_name):
     dxl.set_highest_temperature_limit({new_id: config['temperature_limit']})
     time.sleep(0.01)
     dxl.close()
-    return 0
+    return 'Moteur configuré.'
