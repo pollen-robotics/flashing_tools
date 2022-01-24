@@ -35,10 +35,19 @@ class ProgressThread(QThread):
 class FlashThread(QThread):
 
     flash_result_signal = pyqtSignal(int)
-    module_name = "none"
+    module_name = 'none'
+
+    french_name_to_binary_name = {
+        'gate': 'gate',
+        'carte moteurs bras': 'dxlv1',
+        'carte moteurs tête': 'dxlv2',
+        'pince gauche': 'left_gripper',
+        'pince droite': 'right_gripper',
+        'orbita': 'orbita',
+    }
 
     def run(self):
-        flash_result = flash_module(self.module_name)
+        flash_result = flash_module(self.french_name_to_binary_name[self.module_name])
         self.flash_result_signal.emit(flash_result)
 
     def get_module_name(self, name):
@@ -53,15 +62,15 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setFixedSize(QSize(400, 200))
-        self.setWindowTitle("Module flashing")
+        self.setWindowTitle('Configuration carte électronique')
 
         self.progress_thread = ProgressThread()
         self.flash_thread = FlashThread()
 
         self.modules_list = QComboBox()
-        self.modules_list.addItems(["gate", "dxlv1", "dxlv2", "left_gripper", "right_gripper", "orbita"])
+        self.modules_list.addItems(['gate', 'carte moteurs bras', 'carte moteurs tête', 'pince gauche', 'pince droite', 'orbita'])
 
-        flash_button = QPushButton("Flash")
+        flash_button = QPushButton('Configurer')
         flash_button.clicked.connect(self.flash)
 
         self.progress_bar = QProgressBar(self)
@@ -92,7 +101,7 @@ class MainWindow(QMainWindow):
             self.flash_thread.flash_result_signal.connect(self.check_flash)
             self.flash_thread.start()
 
-            self.flash_info_label.setText("")
+            self.flash_info_label.setText('')
 
     def set_progress(self, value):
         self.progress_bar.setValue(value)
@@ -101,9 +110,9 @@ class MainWindow(QMainWindow):
         if value == -1:
             self.progress_thread.stop()
             self.progress_bar.setValue(0)
-            self.flash_info_label.setText("Flash failed. Make sure the device is connected.")
+            self.flash_info_label.setText('Configuration échouée. \n Assurez vous que la carte est correctement branchée.')
         if value == 0:
-            self.flash_info_label.setText("Flash succeeded. The device can be safely unplugged.")
+            self.flash_info_label.setText('Configuration réussie. La carte peut être débranchée.')
 
 
 
