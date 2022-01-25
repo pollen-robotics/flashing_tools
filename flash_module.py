@@ -41,8 +41,8 @@ class FlashThread(QThread):
         'gate': 'gate',
         'carte moteurs bras': 'dxlv1',
         'carte moteurs tête': 'dxlv2',
-        'pince gauche': 'left_gripper',
-        'pince droite': 'right_gripper',
+        'pince gauche': 'left-gripper-force-sensor',
+        'pince droite': 'right-gripper-force-sensor',
         'orbita': 'orbita',
     }
 
