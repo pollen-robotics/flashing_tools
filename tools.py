@@ -19,6 +19,26 @@ robot_part_to_real_name = {
     'tête': 'head',
 }
 
+french_motor_name_to_english = {
+    'épaule droite 10': 'r_shoulder_pitch',
+    'épaule droite 11': 'r_shoulder_roll', 
+    'biceps droit 12': 'r_arm_yaw',
+    'coude droit 13': 'r_elbow_pitch', 
+    'avant-bras droit 14': 'r_forearm_yaw',
+    'poignet droit 15': 'r_wrist_pitch',
+    'poignet droit 16': 'r_wrist_roll',
+    'pince droite 17': 'r_gripper',
+    'épaule gauche 20': 'l_shoulder_pitch',
+    'épaule gauche 21': 'l_shoulder_roll', 
+    'biceps gauche 22': 'l_arm_yaw',
+    'coude gauche 23': 'l_elbow_pitch', 
+    'avant-bras gauche 24': 'l_forearm_yaw',
+    'poignet gauche 25': 'l_wrist_pitch',
+    'poignet gauche 26': 'l_wrist_roll',
+    'pince gauche 27': 'l_gripper',
+    'antenne gauche 30': 'l_antenna',
+    'antenne droite 31': 'r_antenna',
+}
 
 def flash_module(module: str):
     try:
@@ -39,7 +59,7 @@ def get_motor_config(robot_part, motor_name):
     with open(str(CONFIG_PATH / f'{real_robot_part}.yaml')) as f:
         part_conf = yaml.load(f, Loader=yaml.FullLoader)
 
-    motor_conf = part_conf[real_robot_part][motor_name]['dxl_motor']
+    motor_conf = part_conf[real_robot_part][french_motor_name_to_english[motor_name]]['dxl_motor']
 
     config['id'] = motor_conf['id']
     config['limit_angle'] = (int(np.rad2deg(motor_conf['cw_angle_limit'])),

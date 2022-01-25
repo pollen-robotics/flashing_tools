@@ -16,15 +16,15 @@ from PyQt6.QtWidgets import (
 from tools import flash_motor
 
 motors_per_part = {
-    'bras droit': ['épaule droite 1', 'épaule droite 2', 'biceps droit',
-                   'coude droit', 'avant-bras droit',
-                   'poignet droit 1', 'poignet droit 2',
-                   'pince droite'],
-    'bras gauche': ['épaule gauche 1', 'épaule gauche 2', 'biceps gauche',
-                    'coude gauche', 'avant-bras gauche',
-                    'poignet gauche 1', 'poignet gauche 2',
-                    'pince gauche'],
-    'tête': ['antenne gauche', 'antenne droite'],
+    'bras droit': ['épaule droite 10', 'épaule droite 11', 'biceps droit 12',
+                   'coude droit 13', 'avant-bras droit 14',
+                   'poignet droit 15', 'poignet droit 16',
+                   'pince droite 17'],
+    'bras gauche': ['épaule gauche 20', 'épaule gauche 21', 'biceps gauche 22',
+                    'coude gauche 23', 'avant-bras gauche 24',
+                    'poignet gauche 25', 'poignet gauche 26',
+                    'pince gauche 27'],
+    'tête': ['antenne gauche 30', 'antenne droite 31'],
 }
 
 
