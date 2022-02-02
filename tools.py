@@ -7,7 +7,7 @@ import time
 import yaml
 import numpy as np
 from pypot.dynamixel import DxlIO, Dxl320IO
-from pypot.dynamixel.io.abstract_io import DxlTimeoutError
+from pypot.dynamixel.io.abstract_io import DxlTimeoutError, DxlCommunicationError
 
 
 LUOSFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000 -D'
@@ -99,7 +99,12 @@ def flash_motor(robot_part, motor_name, motor_type = 'dxl'):
     else:
         dxl = DxlIO(port=port, baudrate=57600)
 
-    if not dxl.scan(range(40)) and motor_type=='dxl':
+    try:
+        dxl_scanned = dxl.scan(range(40))
+    except DxlCommunicationError:
+        return "Moteur mal détecté. \n Assurez vous que l'alimentation est branchée."
+
+    if not dxl_scanned and motor_type=='dxl':
         dxl.close()
         dxl = DxlIO(port=get_usb2ax_port(), baudrate=1000000)
 
