@@ -7,6 +7,8 @@ import time
 import yaml
 import numpy as np
 from pypot.dynamixel import DxlIO, Dxl320IO
+from pypot.dynamixel.io.abstract_io import DxlTimeoutError
+
 
 LUOSFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000 -D'
 BIN_PATH = Path.home() / 'dev' / 'binaries'
@@ -116,13 +118,18 @@ def flash_motor(robot_part, motor_name, motor_type = 'dxl'):
     if dxl_scanned[0] != new_id:
         dxl.change_id({dxl_scanned[0]: new_id})
 
-    dxl.change_baudrate({new_id: 1000000})
-    time.sleep(0.01)
-    dxl.set_angle_limit({new_id: config['limit_angle']})
-    time.sleep(0.01)
-    dxl.set_return_delay_time({new_id: config['delay_time']}, convert=False)
-    time.sleep(0.01)
-    dxl.set_highest_temperature_limit({new_id: config['temperature_limit']})
-    time.sleep(0.01)
+    try:
+        dxl.set_angle_limit({new_id: config['limit_angle']})
+        time.sleep(0.01)
+        dxl.set_return_delay_time({new_id: config['delay_time']}, convert=False)
+        time.sleep(0.01)
+        dxl.set_highest_temperature_limit({new_id: config['temperature_limit']})
+        time.sleep(0.01)
+        dxl.change_baudrate({new_id: 1000000})
+        time.sleep(0.01)
+
+    except DxlTimeoutError:
+        return 'Un problème est survenu, veuillez rééssayer.'
+
     dxl.close()
     return 'Moteur configuré.'
