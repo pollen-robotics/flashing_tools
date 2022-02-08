@@ -53,7 +53,7 @@ your_python_path path_to_flashing_tools/flash_motor.py
 your_python_path path_to_flashing_tools/flash_module.py
 ```
 
-## Create desktop icons (in Ubuntu)
+## Creating desktop icons (in Ubuntu)
 
 1. Make the bash script executable
 ```bash
