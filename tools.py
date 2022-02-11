@@ -11,7 +11,7 @@ from pypot.dynamixel.io.abstract_io import DxlTimeoutError, DxlCommunicationErro
 
 
 LUOSFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000 -D'
-BIN_PATH = Path.home() / 'dev' / 'binaries'
+BIN_PATH = Path.cwd() /'binaries'
 CONFIG_PATH = Path.home() / 'dev' / 'reachy_pyluos_hal' / 'reachy_pyluos_hal' / 'config'
 
 
