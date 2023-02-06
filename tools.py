@@ -10,9 +10,9 @@ from pypot.dynamixel import DxlIO, Dxl320IO
 from pypot.dynamixel.io.abstract_io import DxlTimeoutError, DxlCommunicationError
 
 
-LUOSFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000 -D'
-BIN_PATH = Path.home() / 'dev' / 'flashing_tools' /'binaries'
-CONFIG_PATH = Path.home() / 'dev' / 'reachy_pyluos_hal' / 'reachy_pyluos_hal' / 'config'
+L0DXLFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000 -D'
+BIN_PATH = Path.home() / 'dev' / 'flashing_tools' / 'binaries'
+CONFIG_PATH = Path.home() / 'dev' / 'flashing_tools' / 'config'
 
 
 robot_part_to_real_name = {
@@ -23,17 +23,17 @@ robot_part_to_real_name = {
 
 french_motor_name_to_english = {
     'épaule droite 10': 'r_shoulder_pitch',
-    'épaule droite 11': 'r_shoulder_roll', 
+    'épaule droite 11': 'r_shoulder_roll',
     'biceps droit 12': 'r_arm_yaw',
-    'coude droit 13': 'r_elbow_pitch', 
+    'coude droit 13': 'r_elbow_pitch',
     'avant-bras droit 14': 'r_forearm_yaw',
     'poignet droit 15': 'r_wrist_pitch',
     'poignet droit 16': 'r_wrist_roll',
     'pince droite 17': 'r_gripper',
     'épaule gauche 20': 'l_shoulder_pitch',
-    'épaule gauche 21': 'l_shoulder_roll', 
+    'épaule gauche 21': 'l_shoulder_roll',
     'biceps gauche 22': 'l_arm_yaw',
-    'coude gauche 23': 'l_elbow_pitch', 
+    'coude gauche 23': 'l_elbow_pitch',
     'avant-bras gauche 24': 'l_forearm_yaw',
     'poignet gauche 25': 'l_wrist_pitch',
     'poignet gauche 26': 'l_wrist_roll',
@@ -42,9 +42,10 @@ french_motor_name_to_english = {
     'antenne droite 31': 'r_antenna',
 }
 
+
 def flash_module(module: str):
     try:
-        cmd = LUOSFLASH.split() + [str(BIN_PATH / f'{module}-firmware.bin')]
+        cmd = L0DXLFLASH.split() + [str(BIN_PATH / f'{module}-firmware.bin')]
         check_output(cmd)
     except CalledProcessError:
         return -1
@@ -85,7 +86,7 @@ def get_usb2ax_port():
     return port
 
 
-def flash_motor(robot_part, motor_name, motor_type = 'dxl'):
+def flash_motor(robot_part, motor_name, motor_type='dxl'):
     config = get_motor_config(robot_part, motor_name)
 
     port = get_usb2ax_port()
@@ -104,7 +105,7 @@ def flash_motor(robot_part, motor_name, motor_type = 'dxl'):
     except DxlCommunicationError:
         return "Moteur mal détecté. \n Assurez vous que l'alimentation est branchée."
 
-    if not dxl_scanned and motor_type=='dxl':
+    if not dxl_scanned and motor_type == 'dxl':
         dxl.close()
         dxl = DxlIO(port=get_usb2ax_port(), baudrate=1000000)
 
