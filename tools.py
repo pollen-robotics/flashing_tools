@@ -56,7 +56,7 @@ def get_motor_config(robot_part, motor_name):
     config = {}
     default_baudrate = 1000000
     default_max_temperature = 55
-    default_return_delay_time = 20
+    default_return_delay_time = 0
 
     real_robot_part = robot_part_to_real_name[robot_part]
     with open(str(CONFIG_PATH / f'{real_robot_part}.yaml')) as f:
