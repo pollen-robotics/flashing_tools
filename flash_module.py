@@ -1,8 +1,8 @@
 import sys
 import time
 
-from PyQt6.QtWidgets import (QMainWindow, QApplication, QComboBox, 
-    QVBoxLayout, QWidget, QPushButton, QProgressBar, QLabel)
+from PyQt6.QtWidgets import (QMainWindow, QApplication, QComboBox,
+                             QVBoxLayout, QWidget, QPushButton, QProgressBar, QLabel)
 from PyQt6.QtCore import Qt, QSize, QTimer, QThread, pyqtSignal
 
 from tools import flash_module
@@ -38,12 +38,12 @@ class FlashThread(QThread):
     module_name = 'none'
 
     french_name_to_binary_name = {
-        'gate': 'gate',
-        'carte moteurs bras': 'dxlv1',
-        'carte moteurs tête': 'dxlv2',
-        'pince gauche': 'left_gripper',
-        'pince droite': 'right_gripper',
-        'orbita': 'orbita',
+        'carte épaule gauche': 'l0_dxl_shoulder_left_51',
+        'carte épaule droite': 'l0_dxl_shoulder_right_41',
+        'carte moteurs tête': 'l0_dxl_head_60',
+        'pince gauche': 'l0_dxl_left_gripper_50',
+        'pince droite': 'l0_dxl_right_gripper_40',
+        # 'orbita': 'orbita',
     }
 
     def run(self):
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         self.flash_thread = FlashThread()
 
         self.modules_list = QComboBox()
-        self.modules_list.addItems(['gate', 'carte moteurs bras', 'carte moteurs tête', 'pince gauche', 'pince droite', 'orbita'])
+        self.modules_list.addItems(['carte épaule gauche', 'carte épaule droite', 'pince gauche', 'pince droite', 'carte moteurs tête'])
 
         flash_button = QPushButton('Configurer')
         flash_button.clicked.connect(self.flash)
@@ -113,7 +113,6 @@ class MainWindow(QMainWindow):
             self.flash_info_label.setText('Configuration échouée. \n Assurez vous que la carte est correctement branchée.')
         if value == 0:
             self.flash_info_label.setText('Configuration réussie. La carte peut être débranchée.')
-
 
 
 app = QApplication(sys.argv)
