@@ -10,7 +10,7 @@ from pypot.dynamixel import DxlIO, Dxl320IO
 from pypot.dynamixel.io.abstract_io import DxlTimeoutError, DxlCommunicationError
 
 
-L0DXLFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000 -D'
+L0DXLFLASH = 'dfu-util -d 0483:df11 -a 0 -s 0x08000000:force:mass-erase -D'
 BIN_PATH = Path.home() / 'dev' / 'flashing_tools' / 'binaries'
 CONFIG_PATH = Path.home() / 'dev' / 'flashing_tools' / 'config'
 
