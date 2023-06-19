@@ -43,7 +43,7 @@ class FlashThread(QThread):
         'carte moteurs tête': 'l0_dxl_head_60',
         'pince gauche': 'l0_dxl_left_gripper_50',
         'pince droite': 'l0_dxl_right_gripper_40',
-        # 'orbita': 'orbita',
+        'orbita': 'Orbitarduinamixel-G474VETx-v2023-05-03.ino',
     }
 
     def run(self):
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         self.flash_thread = FlashThread()
 
         self.modules_list = QComboBox()
-        self.modules_list.addItems(['carte épaule gauche', 'carte épaule droite', 'pince gauche', 'pince droite', 'carte moteurs tête'])
+        self.modules_list.addItems(['carte épaule gauche', 'carte épaule droite', 'pince gauche', 'pince droite', 'carte moteurs tête', 'orbita'])
 
         flash_button = QPushButton('Configurer')
         flash_button.clicked.connect(self.flash)
