@@ -133,6 +133,8 @@ def flash_motor(robot_part, motor_name, motor_type='dxl'):
         time.sleep(0.01)
         dxl.change_baudrate({new_id: 1000000})
         time.sleep(0.01)
+        dxl.set_alarm_shutdown({new_id: ('Overheating Error', )})
+        time.sleep(0.01)
 
     except DxlTimeoutError:
         return 'Un problème est survenu, veuillez rééssayer.'
