@@ -43,7 +43,7 @@ class FlashThread(QThread):
         'carte moteurs tête': 'l0_dxl_head_60',
         'pince gauche': 'l0_dxl_left_gripper_50',
         'pince droite': 'l0_dxl_right_gripper_40',
-        'orbita': 'Orbitarduinamixel-G474VETx-v2023-05-03.ino',
+        'orbita': 'Orbitarduinamixel-G474VETx-v2023-05-03',
     }
 
     def run(self):
