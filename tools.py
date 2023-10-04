@@ -134,7 +134,7 @@ def flash_motor(robot_part, motor_name, motor_type='dxl'):
         dxl.change_baudrate({new_id: 1000000})
         time.sleep(0.01)
         if motor_type == 'dxl320':
-            continue
+            pass
         else:
             dxl.set_alarm_shutdown({new_id: ('Overheating Error', )})
             time.sleep(0.01)
